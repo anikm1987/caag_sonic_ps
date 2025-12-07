@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+
+<!--
+Copyright 2025 Amazon.com, Inc. and its affiliates. All Rights Reserved.
+
+Licensed under the Amazon Software License (the "License").
+You may not use this file except in compliance with the License.
+A copy of the License is located at
+
+  http://aws.amazon.com/asl/
+
+or in the "license" file accompanying this file. This file is distributed
+on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+express or implied. See the License for the specific language governing
+permissions and limitations under the License.
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <title>Digital Assistant</title>
+    <link rel="stylesheet" href="/src/style.css" />
+    <link rel="stylesheet" href="/src/system-prompt-editor.css" />
+    <script type="module" src="/src/main.js"></script>
+    <!-- ✅ Terraform will replace this placeholder -->
+    ${app_config_script}
+  </head>
+  <body>
+ 
+  
+<div id="app" class="pre-call">
+    <!-- HEADER -->
+    <header class="header" style="display:flex; justify-content:space-between; align-items:center; padding:1rem; background:#fff; box-shadow:0 2px 4px rgba(0,0,0,0.05);">
+      <div class="header-left">
+        <a href="/"><img src="/white_caag_logo.png" alt="Logo" class="logo"/></a>
+        <h1 style="margin:0; font-size:1.5rem;">Voice Assistant</h1>
+      </div>
+      <div class="header-right">
+       <div class="timer-container">🕐 <span id="timer">0:00</span></div>
+        <div id="status" class="disconnected">Disconnected</div>
+
+        <!-- ↓ CALL-BOX MOVED HERE ↓ -->
+        <div class="call-box">
+          <span class="call-hint">Press Call Me to speak your request</span>
+          <button id="start" class="button">Call Me</button>
+          <button id="stop"  class="button hidden" disabled>End Call</button>
+        </div>
+
+        <div class="settings-dropdown" style="position:relative;">
+          <button id="settings-toggle" class="icon-button">⚙️</button>
+          <div id="settings-menu" class="dropdown-menu hidden" style="position:absolute; right:0; top:100%; background:#fff; border:1px solid #ccc; border-radius:4px; box-shadow:0 2px 6px rgba(0,0,0,0.1);">
+            <div class="dropdown-item" id="show-prompt-button" style="padding:0.5rem 1rem; cursor:pointer;">Show Prompt</div>
+            <div class="dropdown-item" id="logout-button"     style="padding:0.5rem 1rem; cursor:pointer;">Logout</div>
+          </div>
+        </div>
+      </div>
+    </header>
+ <!-- WELCOME BANNER (new) -->
+      <div id="welcome-container" class="welcome-container">
+        <h2 id="welcome-text">Digital Assistant</h2>
+      </div>
+    <!-- CHAT -->
+    <div id="chat-container">
+      <!-- Conversation messages will appear here -->
+    </div>
+    <!-- SYSTEM PROMPT EDITOR (hidden until toggled) -->
+    <div id="system-prompt-container" style="display:none; max-width:600px; margin:1rem auto; background:#fff3e0; padding:1rem; border:1px solid #ccc; border-radius:4px;">
+      <h2>System Prompt Editor</h2>
+      <div id="save-confirmation" style="display:none; color:#4caf50; margin-bottom:0.5rem;">Saved!</div>
+      <textarea id="system-prompt-textarea" class="system-prompt-textarea" style="width:100%; min-height:150px;"></textarea>
+      <div class="prompt-controls" style="text-align:right; margin-top:0.5rem;">
+        <button id="save-prompt-button" class="button">Save Prompt</button>
+      </div>
+    </div>
+    </div>
+          <div class="footer">
+        <div>CAAG: Voice Chat Interface v1.0</div>
+      </div>
+    </div>
+  </div>
+
+     
+
+  </body>
+</html>

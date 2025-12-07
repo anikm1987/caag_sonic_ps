@@ -1,0 +1,12 @@
+.git
+cdk.out
+node_modules
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+venv/
+terraform

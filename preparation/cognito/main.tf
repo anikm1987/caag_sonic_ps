@@ -1,0 +1,133 @@
+# Configure AWS Providers
+provider "aws" {
+  region = var.aws_region
+}
+
+# --- Cognito User Pool ---
+resource "aws_cognito_user_pool" "main" {
+  name = "${var.prefix}-${var.project_name}-user-pool"
+
+  password_policy {
+    minimum_length    = 8
+    require_lowercase = true
+    require_numbers   = true
+    require_symbols   = true
+    require_uppercase = true
+  }
+
+  auto_verified_attributes = ["email"]
+
+  schema {
+    name                = "email"
+    attribute_data_type = "String"
+    mutable             = true
+    required            = true
+  }
+  schema {
+    name                = "phoneNumber"
+    attribute_data_type = "String"
+    mutable             = true
+    required            = false
+  }
+  admin_create_user_config {
+    # Set to true to disable self-registration and only allow administrators to create users.
+    allow_admin_create_user_only = true
+  }
+  tags = {
+    Name        = "${var.prefix}-${var.project_name}-user-pool"
+    Environment = "Development"
+  }
+}
+
+# --- Cognito User Pool Domain (AWS-managed with custom prefix) ---
+# This configures the domain like: https://your-chosen-prefix.auth.<region>.amazoncognito.com
+resource "aws_cognito_user_pool_domain" "main_aws_managed_prefix" {
+  user_pool_id = aws_cognito_user_pool.main.id
+  domain       = "${var.prefix}-${var.project_name}-auth" # Use the variable for your chosen prefix
+  managed_login_version = 2
+}
+
+
+# --- Cognito User Pool Client (Configured for SPA with PKCE) ---
+resource "aws_cognito_user_pool_client" "web_app_client" {
+  name                                 = "${var.prefix}-${var.project_name}-web-app-client"
+  user_pool_id                         = aws_cognito_user_pool.main.id
+  generate_secret                      = false # Set to 'false' for SPAs using PKCE!
+  explicit_auth_flows                  = ["ALLOW_ADMIN_USER_PASSWORD_AUTH", "ALLOW_REFRESH_TOKEN_AUTH"]
+  prevent_user_existence_errors        = "ENABLED"
+
+  callback_urls = var.cloudfront_app_callback_urls
+  logout_urls   = var.cloudfront_app_logout_urls
+
+  allowed_oauth_scopes          = ["openid", "email", "profile", "phone"]
+  allowed_oauth_flows           = ["code"] # Only 'code' flow for SPAs with PKCE
+  allowed_oauth_flows_user_pool_client = true # Required when using allowed_oauth_flows
+
+  supported_identity_providers = ["COGNITO"]
+}
+
+# --- Test User 1 ---
+resource "aws_cognito_user" "test_user_1" {
+  user_pool_id       = aws_cognito_user_pool.main.id
+  username           = "testuser1"
+  temporary_password = "TestUser1@123!"
+  force_alias_creation = false
+
+  attributes = {
+    email        = "testuser1@example.com"
+    phoneNumber = "+15551234567"
+    email_verified = true
+  }
+
+  message_action = "SUPPRESS"
+}
+
+# --- Test User 2 ---
+resource "aws_cognito_user" "test_user_2" {
+  user_pool_id       = aws_cognito_user_pool.main.id
+  username           = "testuser2"
+  temporary_password = "TestUser2@123!"
+  force_alias_creation = false
+
+  attributes = {
+    email        = "testuser2@example.com"
+    phoneNumber = "+15559876543"
+    email_verified = true
+  }
+
+  message_action = "SUPPRESS"
+}
+
+
+# --- Outputs ---
+output "cognito_user_pool_id" {
+  description = "The ID of the Cognito User Pool."
+  value       = aws_cognito_user_pool.main.id
+}
+
+output "cognito_user_pool_client_id" {
+  description = "The ID of the Cognito User Pool Client."
+  value       = aws_cognito_user_pool_client.web_app_client.id
+}
+
+# This is the desired output for the AWS-managed Cognito domain
+output "cognito_hosted_ui_domain" {
+  description = "The AWS-managed domain for the Cognito Hosted UI (e.g., https://your-prefix.auth.us-east-1.amazoncognito.com)."
+  value       = "https://${aws_cognito_user_pool_domain.main_aws_managed_prefix.domain}.auth.${var.aws_region}.amazoncognito.com"
+}
+
+output "cognito_client_secret" {
+  description = "The secret for the Cognito User Pool Client (sensitive)."
+  value       = aws_cognito_user_pool_client.web_app_client.client_secret
+  sensitive   = true
+}
+
+output "test_user_1_username" {
+  description = "Username for test user 1."
+  value       = aws_cognito_user.test_user_1.username
+}
+
+output "test_user_2_username" {
+  description = "Username for test user 2."
+  value       = aws_cognito_user.test_user_2.username
+}

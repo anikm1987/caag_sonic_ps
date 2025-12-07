@@ -1,0 +1,29 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "iam:CreateRole",
+                "iam:AttachRolePolicy",
+                "iam:PutRolePolicy",
+                "iam:TagRole",
+                "iam:ListPolicyVersions",
+                "iam:DeletePolicyVersion",
+                "iam:ListPolicyVersions",
+                "iam:CreatePolicyVersion",
+                "iam:SetDefaultPolicyVersion",
+                "iam:GetPolicy",
+                "iam:CreatePolicy",
+                "iam:DeletePolicy",
+                "iam:AttachRolePolicy",
+                "iam:DetachRolePolicy",
+                "iam:PassRole",
+                "iam:ListInstanceProfilesForRole",
+                "iam:DeleteRole",
+                "iam:DeleteRolePolicy"
+            ],
+            "Resource": "*"
+        }
+    ]
+}

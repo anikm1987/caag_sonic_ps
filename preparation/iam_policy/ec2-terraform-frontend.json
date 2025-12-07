@@ -1,0 +1,85 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "S3BucketActions",
+            "Effect": "Allow",
+            "Action": [
+                "s3:CreateBucket",
+                "s3:DeleteBucket",
+                "s3:ListBucket",
+                "s3:GetBucketAcl",
+                "s3:GetBucketCORS",
+                "s3:GetBucketLocation",
+                "s3:GetBucketLogging",
+                "s3:GetBucketPolicy",
+                "s3:GetBucketTagging",
+                "s3:GetBucketVersioning",
+                "s3:GetBucketWebsite",
+                "s3:GetLifecycleConfiguration",
+                "s3:GetEncryptionConfiguration",
+                "s3:GetBucketRequestPayment",
+                "s3:GetAccelerateConfiguration",
+                "s3:GetReplicationConfiguration",
+                "s3:GetBucketObjectLockConfiguration",
+                "s3:GetBucketOwnershipControls",
+                "s3:GetBucketPublicAccessBlock",
+                "s3:GetInventoryConfiguration",
+                "s3:PutBucketAcl",
+                "s3:PutBucketCORS",
+                "s3:PutBucketLogging",
+                "s3:PutBucketPolicy",
+                "s3:PutBucketTagging",
+                "s3:PutBucketVersioning",
+                "s3:PutBucketWebsite",
+                "s3:PutLifecycleConfiguration",
+                "s3:PutEncryptionConfiguration",
+                "s3:PutAccelerateConfiguration",
+                "s3:PutReplicationConfiguration",
+                "s3:PutBucketObjectLockConfiguration",
+                "s3:PutBucketOwnershipControls",
+                "s3:PutBucketPublicAccessBlock",
+                "s3:PutInventoryConfiguration",
+                "s3:DeleteBucketPolicy",
+                "s3:DeleteBucketWebsite",
+                "s3:ListBucketVersions",
+                "s3:DeleteObjectVersion"
+            ],
+            "Resource": "arn:aws:s3:::nova-*"
+        },
+        {
+            "Sid": "S3ObjectActions",
+            "Effect": "Allow",
+            "Action": [
+                "s3:PutObject",
+                "s3:GetObject",
+                "s3:DeleteObject",
+                "s3:GetObjectTagging",
+                "s3:PutObjectTagging",
+                "s3:GetObjectAcl",
+                "s3:PutObjectAcl"
+            ],
+            "Resource": "arn:aws:s3:::nova-*/*"
+        },
+        {
+            "Sid": "CloudFrontActions",
+            "Effect": "Allow",
+            "Action": [
+                "cloudfront:CreateDistribution",
+                "cloudfront:GetDistribution",
+                "cloudfront:UpdateDistribution",
+                "cloudfront:DeleteDistribution",
+                "cloudfront:ListDistributions",
+                "cloudfront:CreateOriginAccessControl",
+                "cloudfront:GetOriginAccessControl",
+                "cloudfront:UpdateOriginAccessControl",
+                "cloudfront:DeleteOriginAccessControl",
+                "cloudfront:ListOriginAccessControls",
+                "cloudfront:ListTagsForResource",
+                "cloudfront:TagResource",
+                "cloudfront:UntagResource"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
