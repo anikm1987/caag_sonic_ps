@@ -16,19 +16,12 @@ resource "aws_cognito_user_pool" "main" {
   }
 
   auto_verified_attributes = ["email"]
+  mfa_configuration = "ON"
+  
+  software_token_mfa_configuration {
+      enabled = true
+  }
 
-  schema {
-    name                = "email"
-    attribute_data_type = "String"
-    mutable             = true
-    required            = true
-  }
-  schema {
-    name                = "phoneNumber"
-    attribute_data_type = "String"
-    mutable             = true
-    required            = false
-  }
   admin_create_user_config {
     # Set to true to disable self-registration and only allow administrators to create users.
     allow_admin_create_user_only = true
@@ -46,7 +39,11 @@ resource "aws_cognito_user_pool_domain" "main_aws_managed_prefix" {
   domain       = "${var.prefix}-${var.project_name}-auth" # Use the variable for your chosen prefix
   managed_login_version = 2
 }
-
+# --- Cognito User Pool UI Customization ---
+resource "aws_cognito_user_pool_ui_customization" "custom_style" {
+  user_pool_id = aws_cognito_user_pool.main.id
+  client_id    = aws_cognito_user_pool_client.web_app_client.id 
+}
 
 # --- Cognito User Pool Client (Configured for SPA with PKCE) ---
 resource "aws_cognito_user_pool_client" "web_app_client" {
@@ -64,38 +61,6 @@ resource "aws_cognito_user_pool_client" "web_app_client" {
   allowed_oauth_flows_user_pool_client = true # Required when using allowed_oauth_flows
 
   supported_identity_providers = ["COGNITO"]
-}
-
-# --- Test User 1 ---
-resource "aws_cognito_user" "test_user_1" {
-  user_pool_id       = aws_cognito_user_pool.main.id
-  username           = "testuser1"
-  temporary_password = "TestUser1@123!"
-  force_alias_creation = false
-
-  attributes = {
-    email        = "testuser1@example.com"
-    phoneNumber = "+15551234567"
-    email_verified = true
-  }
-
-  message_action = "SUPPRESS"
-}
-
-# --- Test User 2 ---
-resource "aws_cognito_user" "test_user_2" {
-  user_pool_id       = aws_cognito_user_pool.main.id
-  username           = "testuser2"
-  temporary_password = "TestUser2@123!"
-  force_alias_creation = false
-
-  attributes = {
-    email        = "testuser2@example.com"
-    phoneNumber = "+15559876543"
-    email_verified = true
-  }
-
-  message_action = "SUPPRESS"
 }
 
 
@@ -116,18 +81,3 @@ output "cognito_hosted_ui_domain" {
   value       = "https://${aws_cognito_user_pool_domain.main_aws_managed_prefix.domain}.auth.${var.aws_region}.amazoncognito.com"
 }
 
-output "cognito_client_secret" {
-  description = "The secret for the Cognito User Pool Client (sensitive)."
-  value       = aws_cognito_user_pool_client.web_app_client.client_secret
-  sensitive   = true
-}
-
-output "test_user_1_username" {
-  description = "Username for test user 1."
-  value       = aws_cognito_user.test_user_1.username
-}
-
-output "test_user_2_username" {
-  description = "Username for test user 2."
-  value       = aws_cognito_user.test_user_2.username
-}
