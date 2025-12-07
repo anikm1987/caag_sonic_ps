@@ -1,6 +1,6 @@
 terraform {
   backend "s3" {
-    bucket         = "novasonicstatefile"
+    bucket         = "dev-caag-ps-nova-tfstatefile"
     # A unique path for this project's state file within the S3 bucket.
     # Use a clear naming convention, e.g., <environment>/<service-name>/terraform.tfstate
     key            = "dev/nova-ps/react-app/terraform.tfstate" # <-- Customize this path and filename

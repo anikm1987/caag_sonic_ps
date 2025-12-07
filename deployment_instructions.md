@@ -17,15 +17,18 @@ Deployment Instructions
 
 ## Terraform State using S3 bucket
 - Create a S3 bucket to store all terraform state. Update below section with the S3 details to use.
-`novasonicstatefile`
+`dev-caag-ps-nova-tfstatefile`
 - Create a dynamodb table named `terraform-state-lock-table` and Partition key `LockID`. This will be used to terraform state lock files to avoid corruption.
 - Terraform code should be stored under - ./caag_sonic_ps/preparation/s3/main.tf
+- Once you create the S3, next time you can add the backend so that tf state gets imported in the newly created S3.
 
 ## Network
 
 - Create one VPC with 2 public and 2 private subnet
 - internet gateway , nat gateway and associated route table entries.
 - Terraform code is stored under [preparation/vpc/main.tf](preparation/vpc/main.tf)
+- Amend variables according to your need.
+- Keep note of the vpc id and subnet ids. This will be required in the below steps.
 
 ## Setup EC2 Instance
 1. Create an EC2 instance (LINUX) 
@@ -38,7 +41,7 @@ Deployment Instructions
     - Storage: 50 GiB (gp3)
     - Add IAM instance profile (if already exist `my-ec2-role`) - can be added later. 
 
-2. Install all required softwares (Note: below instructions are Ubuntu based, changed accordingly if you choose any other OS in Step - 1)
+2. Install all required softwares 
     - For detailed step , please refer to [preparation/ec2/initial_software.sh](preparation/ec2/initial_software.sh)
 
 
@@ -57,13 +60,16 @@ Deployment Instructions
 
 ## BedrockKnowledgeBase
 
-Amazon bedrock knowledgebase setup guide is available at [preparation/knowledgebase/KB_SETUP_GUIDE.md](preparation/knowledgebase/KB_SETUP_GUIDE.md)
+- Amazon bedrock knowledgebase setup guide is available at [preparation/knowledgebase/KB_SETUP_GUIDE.md](preparation/knowledgebase/KB_SETUP_GUIDE.md)
+- if you dont want to use knowledgebase you can skip this step
+
 
 
 ## Route53 domain
 - For registering new domain please follow the guideline mentioned in [Registering New Domain](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/domain-register.html#domain-register-procedure-section) 
 
-- Example domain name : caagagenticps.com 
+- Example domain name : caagagenticps.com
+- NOTE: If you change the domain name then make sure all reference of the domain name is updated accordingly. 
 
 ## ACM Certificate
 - Prerequisties: Route53 domain is created and region of deployment is us-east-1
@@ -72,6 +78,7 @@ Amazon bedrock knowledgebase setup guide is available at [preparation/knowledgeb
 
 ```
 # Navigate to the TF Location mentioned above
+# Verify the variables used for the terraform code and update accordingly
 terraform init
 terraform plan # check the plan and validate it is creating correct resources.
 terraform apply 
@@ -85,6 +92,7 @@ terraform apply
 
 ```
 # Navigate to the TF Location mentioned above
+# Verify the variables used for the terraform code and update accordingly
 terraform init
 terraform plan # check the plan and validate it is creating correct resources.
 terraform apply 
@@ -98,6 +106,7 @@ terraform apply
 
 ```
 # Navigate to the TF Location mentioned above
+# Verify the variables used for the terraform code and update accordingly
 terraform init
 terraform plan # check the plan and validate it is creating correct resources.
 terraform apply 
@@ -111,9 +120,26 @@ terraform apply
 
 ```
 # Navigate to the frontend Location mentioned above
+# update the variables used for the terraform code as per cognito details.
 chmod +x *.sh
 ./deploy_ui.sh
 # Capture the output - will be required in subsequent steps.
+```
+
+## Tech Debt
+- Currently after deployment of Frintend, you need to deploy the cognito one more time by updating the cludfront url. you can safely destroy cognito and deploy again
+- Navigate to [Cognito](preparation/cognito) 
+```
+terraform destroy
+# update the cloudfront urls in variables.tf
+terraform apply
+# capture the client id and secret
+```
+- Navigate to [Frontend Terraform](preparation/frontend/terrafomr)
+- Update the variable.tf with new cognito details
+```
+# Deploy frontend
+./deploy_ui.sh
 ```
 
 ## Backend
@@ -124,6 +150,7 @@ chmod +x *.sh
 # Navigate to the Backened Location mentioned above
 ./docker_build_push.sh 1.0.0
 cd terraform
+# update the variables used for the terraform code as per cognito details.
 terraform init
 terraform plan # check the plan and validate it is creating correct resources.
 terraform apply 
