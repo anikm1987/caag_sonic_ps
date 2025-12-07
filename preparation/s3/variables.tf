@@ -12,3 +12,11 @@ variable "project_name" {
   description = "The project name ."
   default     = "caag-ps-nova"
 }
+
+
+variable "dynamodb_table_name" {
+  description = "Name of the DynamoDB table for state locking"
+  type        = string
+  default     = "terraform-state-lock-table"
+}
+
