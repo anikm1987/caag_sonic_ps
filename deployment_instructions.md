@@ -14,12 +14,22 @@ Deployment Instructions
 9. [Cognito](#Cognito)
 10. [Frontend](#Frontend)
 11. [Backend](#Backend)
+12. [Application Access](#Application-Access)
 
 ## Terraform State using S3 bucket
 - Create a S3 bucket to store all terraform state. Update below section with the S3 details to use.
 `dev-caag-ps-nova-tfstatefile`
 - Create a dynamodb table named `terraform-state-lock-table` and Partition key `LockID`. This will be used to terraform state lock files to avoid corruption.
-- Terraform code should be stored under - ./caag_sonic_ps/preparation/s3/main.tf
+- Terraform code stored under - [preparation/s3/main.tf](preparation/s3/main.tf)
+```
+# Navigate to the TF Location mentioned above
+# Verify the variables used for the terraform code and update accordingly
+terraform init
+terraform plan # check the plan and validate it is creating correct resources.
+terraform apply 
+
+# Capture the output - will be required in subsequent steps.
+```
 - Once you create the S3, next time you can add the backend so that tf state gets imported in the newly created S3.
 
 ## Network
