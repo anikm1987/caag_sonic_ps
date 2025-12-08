@@ -17,7 +17,7 @@ Context
 5. [Customization](#customization)
    - [Prompting](#prompting)
    - [Tooling](#tooling)
-
+6. [TODO](#TODO)
 
 
 
@@ -90,4 +90,8 @@ You can change the system prompt from the UI.
 Tooling for Amazon Nova Sonic is implemented using the Model Context Protocol (MCP) in the backend Python application. Amazon Nova Sonic outputs text indicating it wants to use a tool, the MCP server processes the tool call, and the response is returned back to the model for use in generation.
 
 - In this example there is one tool i.e. knowledge base lookup to query against Amazon bedrock knowledge base.
+
+
+## TODO
+- Integration with Amazon connect if required.
 
