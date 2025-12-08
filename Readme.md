@@ -94,4 +94,5 @@ Tooling for Amazon Nova Sonic is implemented using the Model Context Protocol (M
 
 ## TODO
 - Integration with Amazon connect if required.
+- Conversation summarization and persistance.
 
