@@ -96,6 +96,7 @@ Tooling for Amazon Nova Sonic is implemented using the Model Context Protocol (M
 ## TODO
 - Integration with Amazon connect if required.
 - Conversation summarization and persistance.
+- How can you integrate specific guardrails (Important enhancement to look at)
 
 ## Limitation
 - Currently Nova Sonic model gets timedout around 8 minutes so conversation will end at that point of time. If conversation requires more than 8 minutes then session resumption techniques needs to be adapted. 
