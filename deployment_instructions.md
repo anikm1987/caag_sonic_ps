@@ -160,7 +160,7 @@ terraform apply
 # Navigate to the Backened Location mentioned above
 ./docker_build_push.sh 1.0.0
 cd terraform
-# update the variables used for the terraform code as per cognito details.
+# update the variables used for the terraform code as per cognito details & vpc and subnet id details.
 terraform init
 terraform plan # check the plan and validate it is creating correct resources.
 terraform apply 
